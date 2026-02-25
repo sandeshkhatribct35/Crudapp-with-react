@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
-export default function App() {
+function App() {
     const [items, setItems] = useState([]);
     const [text, setText] = useState("");
 
@@ -17,33 +18,29 @@ export default function App() {
         e.preventDefault();
         if (!text.trim()) return;
 
-        setItems([
-            { id: Date.now(), name: text, done: false },
-            ...items,
-        ]);
+        setItems([{ id: Date.now(), name: text, done: false }, ...items]);
         setText("");
     };
 
-    const toggle = (id) => {
+    const toggleItem = (id) => {
         setItems(
-            items.map((i) =>
-                i.id === id ? { ...i, done: !i.done } : i
+            items.map((item) =>
+                item.id === id ? { ...item, done: !item.done } : item
             )
         );
     };
 
-    const remove = (id) => {
-        setItems(items.filter((i) => i.id !== id));
+    const deleteItem = (id) => {
+        setItems(items.filter((item) => item.id !== id));
     };
 
-    const clearAll = () => setItems([]);
-
     return (
-        <div className="app">
+        <div className="container">
             <h1>🛒 Grocery Bud</h1>
 
             <form onSubmit={addItem}>
                 <input
+                    type="text"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Add grocery item..."
@@ -51,9 +48,7 @@ export default function App() {
                 <button>Add</button>
             </form>
 
-            {items.length === 0 && (
-                <p className="empty">Your list is empty</p>
-            )}
+            {items.length === 0 && <p className="empty">List is empty</p>}
 
             <ul>
                 {items.map((item) => (
@@ -61,19 +56,15 @@ export default function App() {
                         <input
                             type="checkbox"
                             checked={item.done}
-                            onChange={() => toggle(item.id)}
+                            onChange={() => toggleItem(item.id)}
                         />
                         <span>{item.name}</span>
-                        <button onClick={() => remove(item.id)}>✖</button>
+                        <button onClick={() => deleteItem(item.id)}>❌</button>
                     </li>
                 ))}
             </ul>
-
-            {items.length > 0 && (
-                <button className="clear" onClick={clearAll}>
-                    Clear All
-                </button>
-            )}
         </div>
     );
 }
+
+export default App;
